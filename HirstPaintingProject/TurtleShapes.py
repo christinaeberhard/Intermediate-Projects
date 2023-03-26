@@ -4,7 +4,9 @@ import random
 noah = Turtle()
 noah.color("DarkSalmon")
 
-colors = ["DarkGoldenrod", "DarkSalmon", "DarkSlateGrey", "DarkSeaGreen", "comsilk4", "DarkGreen", "coral4", "burlywood4"]
+colors = ["DarkGoldenrod", "DarkSalmon", "DarkSlateGrey", "DarkSeaGreen", "comsilk4", "DarkGreen", "coral4",
+          "burlywood4", "DarkRed", "brown", "aquamarine4", "HotPink", "ForestGreen", "goldenrod4", "LightPink",
+          "PeachPuff4", "maroon", "OliveDrab"]
 
 def draw_shapes(num_sides):
     for _ in range(num_sides):
