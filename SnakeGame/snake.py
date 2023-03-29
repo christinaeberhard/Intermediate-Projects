@@ -15,11 +15,18 @@ class Snake:
 
     def create_snake(self):
         for position in starting_positions:
-            new_segment = t.Turtle("square")
-            new_segment.color("white")
-            new_segment.penup()
-            new_segment.goto(position)
-            self.segments.append(new_segment)
+            self.add_segment(position)
+
+    def add_segment(self, position):
+        new_segment = t.Turtle("square")
+        new_segment.color("white")
+        new_segment.penup()
+        new_segment.goto(position)
+        self.segments.append(new_segment)
+
+    def grow_snake(self):
+        """ adds new segment to the last segment of the snake (after collision with food)"""
+        self.add_segment(self.segments[-1].position())
 
     def move(self):
         """we want the segments to move from back to front and follow the
@@ -31,7 +38,7 @@ class Snake:
         self.head.forward(move_distance)
 
     def up(self):
-        """ check, if the snake is moving up, than its not allowed to move backwards"""
+        """ check, if the snake is moving up, then it's not allowed to move backwards"""
         if self.head.heading() != down:
             self.head.setheading(up)
 
