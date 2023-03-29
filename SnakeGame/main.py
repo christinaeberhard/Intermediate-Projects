@@ -9,6 +9,8 @@ screen = t.Screen()
 screen.setup(width=600, height=600)
 screen.bgcolor("black")
 screen.title("Christinas Snake Game")
+
+# turning off the animation
 screen.tracer(0)
 
 # create new objects from the classes
@@ -26,6 +28,7 @@ screen.onkey(snake.right, "Right")
 game_is_on = True
 
 while game_is_on:
+    # in addition to tracer(0)
     screen.update()
     time.sleep(0.1)
     snake.move()
