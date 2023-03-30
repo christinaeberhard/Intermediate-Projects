@@ -1,6 +1,8 @@
 import turtle as t
-
-from pygments.lexers import go
+from paddle import Paddle
+from ball import Ball
+from scoreboard import Scoreboard
+import time
 
 screen = t.Screen()
 screen.setup(width=800, height=600)
@@ -10,30 +12,46 @@ screen.title("Welcome to Pong!")
 #turning of the automation
 screen.tracer(0)
 
-paddle = t.Turtle()
-paddle.shape("square")
-paddle.color("white")
-""" default size of a square turtle is 20 x 20 (20 =1), so we need 5 to get 100 """
-paddle.shapesize(stretch_wid=5, stretch_len=1)
-paddle.penup()
-paddle.goto(350, 0)
+# creating all necessary objects from the modules
+r_paddle = Paddle((350, 0))
+l_paddle = Paddle((-350, 0))
+ball = Ball()
+scoreboard = Scoreboard()
 
-def go_up():
-    new_y = paddle.ycor() + 20
-    paddle.goto(paddle.xcor(), new_y)
-
-def go_down():
-    new_y = paddle.ycor() - 20
-    paddle.goto(paddle.xcor(), new_y)
-
+# game control
 screen.listen()
-screen.onkey(go_up, "Up")
-screen.onkey(go_down, "Down")
+screen.onkey(r_paddle.go_up, "Up")
+screen.onkey(r_paddle.go_down, "Down")
+screen.onkey(l_paddle.go_up, "w")
+screen.onkey(l_paddle.go_down, "s")
 
+# game loop
 game_is_on = True
 while game_is_on:
+    time.sleep(ball.ball_speed)
     # in addition to tracer(0)
     screen.update()
+    ball.move()
+
+    # detect collision with the top or bottom wall
+    if ball.ycor() > 280 or ball.ycor() < -280:
+        ball.bounce_y()
+
+    # detect collision with the paddles
+    if ball.distance(r_paddle) < 50 and ball.xcor() > 320 or ball.distance(l_paddle) < 50 and ball.xcor() < -320:
+        ball.bounce_x()
+
+    # detect dismissing r_paddle
+    if ball.xcor() > 380:
+        ball.reset()
+        scoreboard.point_for_l()
+
+    # detect dismissing l_paddle
+    if ball.xcor() < -380:
+        ball.reset()
+        scoreboard.point_for_r()
+
+
 
 
 
