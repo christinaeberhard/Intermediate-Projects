@@ -16,8 +16,5 @@ class Player(Turtle):
     def reset(self):
         self.goto(0, -270)
 
-    def game_over(self):
-        pass
-
 
 

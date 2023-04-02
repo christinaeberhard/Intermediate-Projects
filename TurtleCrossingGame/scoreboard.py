@@ -1,9 +1,10 @@
 from turtle import Turtle
 
+
 class Scoreboard(Turtle):
     def __init__(self):
         super().__init__()
-        self.user_level = 0
+        self.user_level = 1
         self.color("black")
         self.penup()
         self.hideturtle()
@@ -17,4 +18,9 @@ class Scoreboard(Turtle):
     def level_up(self):
         self.user_level += 1
         self.update_scoreboard()
+
+    def game_over(self):
+        self.goto(0,0)
+        self.write("Game over.", align="center", font=("Montserrat", 14, "bold"))
+
 
