@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from random import choice, randint, shuffle
 import pyperclip
+import json
 
 # Password generator
 def generate_password():
@@ -27,17 +28,45 @@ def save_password():
     website = website_input.get()
     email = mail_input.get()
     password = pw_input.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password
+        }
+    }
 
     if len(website) == 0 or len(password) == 0:
         messagebox.showinfo(title="Ooops", message="Please make sure you haven't empty field left.")
     else:
-        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} "
-                               f"\nPassword: {password} \nDo you want to save this?")
-        if is_ok:
-            with open("passwords.txt", "a") as data_file:
-                data_file.write(f"{website} | {email} | {password}\n")
-                website_input.delete(0, END)
-                pw_input.delete(0, END)
+        try:
+            with open("passwords.json", "r") as data_file:
+                # reading old data
+                data = json.load(data_file)
+        except FileNotFoundError:
+            with open("passwords.json", "w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
+            # updating old data with new data
+            data.update(new_data)
+
+            with open("passwords.json", "w") as data_file:
+                # saving updated data
+                json.dump(data, data_file, indent=4)
+        finally:
+            website_input.delete(0, END)
+            pw_input.delete(0, END)
+
+
+# finding passwords
+def find_password():
+    website = website_input.get()
+    with open("passwords.json") as data_file:
+        data = json.load(data_file)
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+
 
 # UI Setup
 window = Tk()
@@ -51,8 +80,8 @@ canvas.grid(column=1, row=0)
 
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
-website_input = Entry(width=35)
-website_input.grid(column=1, row=1, columnspan=2)
+website_input = Entry(width=20)
+website_input.grid(column=1, row=1)
 website_input.focus()   # sets the cursor in this entry field when launching the app
 
 mail_label = Label(text="Email/Username:")
@@ -67,7 +96,9 @@ pw_label.grid(column=0, row=3)
 pw_input = Entry(width=20)
 pw_input.grid(column=1, row=3)
 
-generate_button = Button(text="Generate Password", width=11, command=generate_password)
+search_button = Button(text="Search", width=10, command=save_password)
+search_button.grid(column=2, row=1)
+generate_button = Button(text="Generate Password", width=10, command=generate_password)
 generate_button.grid(column=2, row=3)
 add_button = Button(text="Add", width=32, command=save_password)
 add_button.grid(column=1, row=4, columnspan=2)
